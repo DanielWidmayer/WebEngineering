@@ -1,0 +1,45 @@
+{
+    "title": "6942414",
+    "name": "webengineering",
+    "version": "0.0.1",
+    "description": "WebEngineering Project",
+    "keywords": [
+        "css",
+        "sass",
+        "html",
+        "responsive",
+        "theme"
+    ],
+    "scripts": {
+        "start": "gulp watch"
+    },
+    "dependencies": {
+        "body-parser": "^1.13.3",
+        "bootstrap": "4.5.0",
+        "del": "^5.1.0",
+        "express": "^4.13.3",
+        "express-basic-auth": "^1.2.0",
+        "popper.js": "^1.16.1",
+        "request": "^2.88.0"
+    },
+    "engines": {
+        "node": "4.8.4",
+        "npm": "2.15.11"
+    },
+    "devDependencies": {
+        "browser-sync": "^2.26.7",
+        "gulp": "^4.0.2",
+        "gulp-autoprefixer": "^7.0.1",
+        "gulp-clean": "^0.4.0",
+        "gulp-clean-css": "^4.3.0",
+        "gulp-header": "^2.0.9",
+        "gulp-plumber": "^1.2.1",
+        "gulp-rename": "^1.4.0",
+        "gulp-sass": "^4.0.2",
+        "gulp-uglify": "^3.0.2",
+        "merge-stream": "^2.0.0"
+    },
+    "main": "gulpfile.js",
+    "author": "Daniel",
+    "license": "ISC"
+}

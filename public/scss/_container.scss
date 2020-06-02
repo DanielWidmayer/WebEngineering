@@ -1,0 +1,34 @@
+.carouselDescription {
+    height: 20vh;
+}
+
+.cIndicators {
+    margin-bottom: 20vh;
+}
+
+.togglerCenter {
+    text-align: center;
+}
+
+.modal-body {
+    overflow-x: auto;
+}
+
+@media only screen and (max-width: 800px) {
+    .carouselDescription {
+        height: 10vh;
+    }
+    .cIndicators {
+        display: none;
+    }
+    .carouselDescription {
+        height: 5vh;
+    }
+}
+
+@media (min-width: 600px) {
+    .modal-xl {
+        width: 95%;
+        max-width: 1200px;
+    }
+}
