@@ -1,4 +1,5 @@
 node_modules
 public/vendor
 public/stylesheets
+public/sound
 *.min.js
