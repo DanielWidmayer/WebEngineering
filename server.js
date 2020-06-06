@@ -1,22 +1,32 @@
-//------------------------------------------------------------------------------
-// This node.js application uses the express package as its implementation of a
-// web server
-// for more info, see: http://expressjs.com
-// --------------------------------------------------------------
-// Here we define all the required modules and services
+// This node.js application uses the node express package for the implementation of the web server
+// MODULES: Here we define all the required modules and services
 var express = require('express'); // critical module for building a Web Server App
 // Here are some basic packages we need together with express
 var bodyParser = require('body-parser'); // helper routines to parse data as JSON in request body
 var request = require('request'); // http requests used for our proxy and cloudant outbound call
 var basicAuth = require('express-basic-auth'); // Some basic HTTP Header Authorization
-//----------------------------------------------------------------------------
+// Text to Audio modules
+const TextToSpeechV1 = require('ibm-watson/text-to-speech/v1');
+const { IamAuthenticator } = require('ibm-watson/auth');
+// .env for vars
+const dotenv = require('dotenv').config();
+if (dotenv.error) throw dotenv.error;
+// filesystem module to save audio to file
+const fs = require('fs');
+// create tts service
+const textToSpeech = new TextToSpeechV1({
+    authenticator: new IamAuthenticator({
+        apikey: process.env.TextToSpeechIAMKey,
+    }),
+    url: process.env.TextToSpeechConfigurl,
+    headers: {
+        'X-Watson-Learning-Opt-Out': 'false',
+    },
+});
+
 // create a new express based Web Server
-// ---------------------------------------------------------------------------
 var app = express();
-// app.set('view engine', 'ejs');
-// app.set('views', __dirname + '/views');
-// app.use('/static', express.static('/views/HTML'))
-app.use(express.static(__dirname + '/public'));
+app.use(express.static(__dirname + '/public')); // set base directory
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 // -----------------------------------------------------------------------------
@@ -38,39 +48,29 @@ app.use(function (req, res, next) {
     res.append('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
     next();
 });
-// -----------------------------------------------------------------------------
-// the WebServer now listens to http://localhost:6001 / http gets and posts
-// -----------------------------------------------------------------------------
-var server = app.listen(6001, function () {
-    console.log('*******************************');
-    console.log('Server listening on Port: ', 6001);
-    console.log('*******************************');
-});
-// -----------------------------------------------------------------------------
-// The following serve for different url paths
-// -----------------------------------------------------------------------------
-// -----------------------------------------------------------------------------
-// localhost:6001/static/filename.ext
-// send a static file out of public/ext/filename.ext to the client
-// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-// as default for static files you can also use
-// localhost:6001/ext/filename.ext..
-// node will use the public folder and concatenates the url path in order to
-// find the file
-// -----------------------------------------------------------------------------
-app.get('/static/:document.:extension', function (req, res) {
-    var docname = '/' + req.params.extension + '/' + req.params.document + '.' + req.params.extension;
-    var options = {
-        root: __dirname + '/public/',
-    };
-    res.sendFile(docname, options, function (err) {
-        // send the file !!
-        if (err) {
-            res.send(err);
-        } else {
-            console.log('Sent:', docname);
-        }
-    });
+
+app.post('/tts', function (req, res) {
+    for (const key in req.body) {
+        // set tts params
+        const synthesizeParams = {
+            voice: 'de-DE_DieterV3Voice',
+            accept: 'audio/mp3',
+            text: req.body[key],
+        };
+        var url = './public/sound/tts' + key + '.mp3';
+        // synthesize text
+        textToSpeech
+            .synthesize(synthesizeParams)
+            .then((response) => {
+                response.result.pipe(fs.createWriteStream(url)).on('finish', function (fd) {
+                    res.sendStatus(200);
+                });
+            })
+            .catch((err) => {
+                console.log('error:', err);
+                res.sendStatus(500);
+            });
+    }
 });
 // -----------------------------------------------------------------------------
 // localhost:6001/redirect
@@ -78,35 +78,6 @@ app.get('/static/:document.:extension', function (req, res) {
 // -----------------------------------------------------------------------------
 app.get('/redirect', function (req, res) {
     res.redirect('https://www.dhbw-stuttgart.de/home/');
-});
-
-app.get('/test', function (req, res) {
-    var docname = '/Templates/htm/webex1.htm';
-    var options = { root: __dirname + '/public/' };
-    res.sendFile(docname, options, function (err) {
-        // send this file
-        if (err) {
-            res.send(err);
-        } else {
-            console.log('Sent:', docname);
-        }
-    });
-});
-// -----------------------------------------------------------------------------
-// localhost:6001/home
-//  we show the map.htm which is the Google Map at the local Stuttgart
-// -----------------------------------------------------------------------------
-app.get('/home', function (req, res) {
-    var docname = '/Templates/htm/map.htm';
-    var options = { root: __dirname + '/public/' };
-    res.sendFile(docname, options, function (err) {
-        // send this file
-        if (err) {
-            res.send(err);
-        } else {
-            console.log('Sent:', docname);
-        }
-    });
 });
 //------------------------------------------------------------------------------
 // localhost:6001/proxy?url_to_be_proxied
@@ -126,50 +97,12 @@ app.all('/proxy', function (req, res) {
         }
     });
 });
-// -------------------------------------------------------------------
-// News processing using the request service.
-// a localhost:6001/news1 will send the tagesschau  RSS (XML Data)
-// -------------------------------------------------------------------
-app.get('/news1', function (req, res) {
-    var o = {
-        uri: 'http://www.tagesschau.de/xml/rss2',
-        method: req.method,
-        json: false,
-    };
-    request(o, function (e, r, b) {
-        try {
-            res.setHeader('Content-type', 'text/plain');
-            res.send(b);
-        } catch (err) {
-            res.setHeader('Content-type', 'text/plain');
-            console.log('Fehler beim Transfer', err);
-            res.send(err);
-        } finally {
-            return;
-        }
-    });
-});
 
 // -----------------------------------------------------------------------------
-//  Chat Management using Cloudant as DB in the Cloud
+// the WebServer now listens to http://localhost:6001 / http gets and posts
 // -----------------------------------------------------------------------------
-// app.all('/chat', function (req, res) {
-//     console.log(req.body.cmd);
-//     if (req.body.Group == undefined || req.body.Group == '') {
-//         req.body.Group = 'GlobalChat';
-//     }
-//     var o = {
-//         uri: 'https://juergenschneider.eu-gb.mybluemix.net/chat',
-//         method: 'POST',
-//         json: true,
-//     };
-//     o.body = req.body;
-//     request(o, function (e, r, b) {
-//         if (e) {
-//             res.send({ Status: 'NOK', Data: e });
-//         } // Error Case in Request Service
-//         else {
-//             res.send(b);
-//         } // Send back the already formated results
-//     });
-// });
+var server = app.listen(6001, function () {
+    console.log('*******************************');
+    console.log('Server listening on Port: ', 6001);
+    console.log('*******************************');
+});
