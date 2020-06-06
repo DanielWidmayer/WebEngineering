@@ -1,4 +1,4 @@
-// Import Custom SB Admin 2 Variables (Overrides Default Bootstrap Variables)
+// Import Custom Variables (to override Default Bootstrap Variables)
 @import 'vars.scss';
 
 // Import Bootstrap
@@ -7,5 +7,5 @@
 // Custom Components
 @import 'text.scss';
 @import 'container.scss';
-@import 'navbar.scss';
 @import 'background.scss';
+@import 'loader_animation.scss';

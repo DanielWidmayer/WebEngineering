@@ -1,25 +1,4 @@
-.headerClass {
-  font-size: 3.5vw;
-}
-
-h2 {
-  font-size: 3.5vw;
-}
 p {
   color: $white;
-}
-@media only screen and (max-width: 800px) {
-  h2 {
-    font-size: 30px;
-  }
-
-  .carouselText {
-    display: none;
-  }
-}
-
-@media only screen and (max-width: 500px) {
-  .headerClass {
-    font-size: 17px;
-  }
+  font-size: 1.1em;
 }

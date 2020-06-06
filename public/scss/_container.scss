@@ -1,9 +1,15 @@
-.carouselDescription {
-    height: 20vh;
+.audio-hidden {
+    display: none;
+}
+
+.container {
+    margin-bottom: $spacer;
+    padding: $spacer;
+    min-height: 77px;
 }
 
 .cIndicators {
-    margin-bottom: 20vh;
+    top: 0;
 }
 
 .togglerCenter {
@@ -14,17 +20,6 @@
     overflow-x: auto;
 }
 
-@media only screen and (max-width: 800px) {
-    .carouselDescription {
-        height: 10vh;
-    }
-    .cIndicators {
-        display: none;
-    }
-    .carouselDescription {
-        height: 5vh;
-    }
-}
 
 @media (min-width: 600px) {
     .modal-xl {
