@@ -5,11 +5,11 @@ This is a DHBW project for WebEngineering.
 ## Get Started
 Execute the following commands in your console to get started: (Linux users)
 When you're using windows you can use the git CLI or git GUI to clone the repo aswell.
-'''git clone https://github.com/DanielWidmayer/WebEngineering.git
+```git clone https://github.com/DanielWidmayer/WebEngineering.git
 cd WebEngineering
 npm install --no-audit
 npm start
-'''
+```
 
 ---
 ## About the Project
