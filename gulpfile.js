@@ -1,5 +1,4 @@
 'use strict';
-
 // Load plugins
 const autoprefixer = require('gulp-autoprefixer');
 const browsersync = require('browser-sync').create();
@@ -29,7 +28,7 @@ function startServer(done) {
         // the script to run the app
         script: 'server.js',
         // this listens to changes in any of these files/routes and restarts the application
-        watch: ['server.js', 'public/**', 'public/*/**'],
+        watch: ['server.js'], //, 'public/**', 'public/*/**'
         ext: 'js',
         // Below i'm using es6 arrow functions but you can remove the arrow and have it a normal .on('restart', function() { // then place your stuff in here }
     }).on('restart', () => {
@@ -62,12 +61,8 @@ function modules() {
     var bootstrapSCSS = gulp.src('./node_modules/bootstrap/scss/**/*').pipe(gulp.dest('./public/vendor/bootstrap/scss'));
     // ChartJS
     var chartJS = gulp.src('./node_modules/chart.js/dist/*.js').pipe(gulp.dest('./public/vendor/chart.js'));
-    // dataTables
-    //var dataTables = gulp.src(['./node_modules/datatables.net/js/*.js', './node_modules/datatables.net-bs4/js/*.js', './node_modules/datatables.net-bs4/css/*.css']).pipe(gulp.dest('./vendor/datatables'));
     // Font Awesome
     //var fontAwesome = gulp.src('./node_modules/@fortawesome/**/*').pipe(gulp.dest('./vendor'));
-    // jQuery Easing
-    //var jqueryEasing = gulp.src('./node_modules/jquery.easing/*.js').pipe(gulp.dest('./vendor/jquery-easing'));
     // jQuery
     var jquery = gulp.src(['./node_modules/jquery/dist/*', '!./node_modules/jquery/dist/core.js']).pipe(gulp.dest('./public/vendor/jquery'));
     return merge(bootstrapJS, bootstrapSCSS, jquery, chartJS); //  jquery, jqueryEasing //, dataTables, fontAwesome,
