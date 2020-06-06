@@ -9,8 +9,8 @@ var basicAuth = require('express-basic-auth'); // Some basic HTTP Header Authori
 const TextToSpeechV1 = require('ibm-watson/text-to-speech/v1');
 const IamAuthenticator = require('ibm-watson/auth');
 // .env for vars
-const dotenv = require('dotenv').config();
-if (dotenv.error) throw dotenv.error;
+//const dotenv = require('dotenv').config();
+//if (dotenv.error) throw dotenv.error;
 // filesystem module to save audio to file
 const fs = require('fs');
 // create tts service
