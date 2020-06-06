@@ -7,7 +7,7 @@ var request = require('request'); // http requests used for our proxy and clouda
 var basicAuth = require('express-basic-auth'); // Some basic HTTP Header Authorization
 // Text to Audio modules
 const TextToSpeechV1 = require('ibm-watson/text-to-speech/v1');
-const { IamAuthenticator } = require('ibm-watson/auth');
+const IamAuthenticator = require('ibm-watson/auth');
 // .env for vars
 const dotenv = require('dotenv').config();
 if (dotenv.error) throw dotenv.error;
