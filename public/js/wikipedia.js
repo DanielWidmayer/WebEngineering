@@ -78,9 +78,7 @@ function evaluateWikipediaData(data) {
                 $('#ttsAudio' + key).attr('src', './sound/tts' + key + '.mp3?onload=loadAudio');
                 $('#loadAnimation' + key).empty(); // delete loading animation
                 $('#ttsAudio' + key).prop('hidden', false);
-                function loadAudio() {
-                    $('#ttsAudio' + key)[0].load();
-                }
+                $('#ttsAudio' + key)[0].load();
             },
         });
     }

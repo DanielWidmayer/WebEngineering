@@ -5,8 +5,7 @@ $(document).ready(function () {
     };
 
     // Get the navbar
-    var navbar = document.getElementById('navbar');
-
+    var navbar = $('#navbar')[0];
     // Get the offset position of the navbar
     var sticky = navbar.offsetTop;
 
@@ -19,5 +18,18 @@ $(document).ready(function () {
             navbar.classList.remove('fixed-top');
             $('header').removeAttr('style');
         }
+    }
+
+    
+});
+// scroll effect
+$('.nav-link').each((index, element)=>{
+    if(index > 0){
+        $(element).click(()=>{
+            if($(location).attr('href').split('/').pop() != $(element).prop('href').split('/').pop()){
+            let offset = $($(element).prop('href').split('/').pop()).offset().top;
+            $('html, body').animate({scrollTop: offset - 30 - $('#navbar').height()});
+            }
+        });           
     }
 });
